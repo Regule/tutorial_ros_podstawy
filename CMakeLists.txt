@@ -10,6 +10,8 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(tf2_ros REQUIRED)
 
 add_executable(minimal_node src/minimal_node.cpp)
 target_include_directories(minimal_node PUBLIC
@@ -55,12 +57,18 @@ ament_target_dependencies(
   fake_lidar
   rclcpp
   sensor_msgs
+  geometry_msgs
+  tf2_ros
 )
 
 install(TARGETS minimal_node small_publisher small_subscriber fake_lidar
   DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY launch
+    DESTINATION share/${PROJECT_NAME}
+)
+
+install(DIRECTORY config
     DESTINATION share/${PROJECT_NAME}
 )
 
