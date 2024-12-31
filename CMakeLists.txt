@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(tutoriale_ros_podstawy)
+project(tutorial_ros_podstawy)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -46,7 +46,7 @@ ament_target_dependencies(
 )
 
 # FAKE LIDAR
-add_executable(fake_lidar src/fake_lidar.cpp)
+add_executable(fake_lidar src/fake_lidar.cpp src/fake_lidar_config.cpp)
 target_include_directories(fake_lidar PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
