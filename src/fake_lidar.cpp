@@ -4,6 +4,7 @@
 #include "tf2_ros/static_transform_broadcaster.h"
 #include "geometry_msgs/msg/transform_stamped.hpp"
 #include "fake_lidar_config.hpp"
+#include "tutorial_ros_podstawy/fake_sensor_utils.hpp"
 
 
 class FakeLidarNode: public rclcpp::Node
@@ -15,6 +16,7 @@ private:
   rclcpp::Publisher<sensor_msgs::msg::LaserScan>::SharedPtr _scan_publisher;
   rclcpp::TimerBase::SharedPtr _scan_timer;
   std::unique_ptr<tf2_ros::StaticTransformBroadcaster> _frame_brodcaster;
+  int _step;
 
 
 private:
@@ -26,6 +28,8 @@ FakeLidarNode::FakeLidarNode(): Node("fake_lidar")
   _config.declare(this);
   _config.update(this);
   _config.print(this);
+
+  _step = 0;
 
   _scan_publisher = this->create_publisher<sensor_msgs::msg::LaserScan>("/scan", 10);
   _scan_timer = this->create_wall_timer(std::chrono::milliseconds(_config.get_scan_period_ms()),
@@ -50,16 +54,22 @@ void FakeLidarNode::publish_scan()
   msg.range_max = _config.range.second;
   msg.scan_time = _config.get_scan_period_ms()/1000;
 
+  fake_sensors::CyclicObstacle obstacle(_step, 1.0, _config.sample_count);
   std::vector<float> ranges(_config.sample_count);
   for(int i=0; i<_config.sample_count; i++)
   {
-    ranges[i] = _config.get_scaled_sample(0.5);
+    ranges[i] = _config.get_scaled_sample(obstacle[i]);
   }
   msg.ranges = ranges;
 
   msg.header.frame_id = "laser_frame";
   msg.header.stamp = this->now();
   _scan_publisher->publish(msg);
+  _step++;
+  if(_step >= _config.sample_count)
+  {
+    _step = 0;
+  }
 
 }
 

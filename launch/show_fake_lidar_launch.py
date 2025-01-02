@@ -11,10 +11,11 @@ def generate_launch_description():
     )
 
 
+    rviz_config_path = f'{get_package_share_directory('tutorial_ros_podstawy')}/config/show_fake_lidar.rviz'
     rviz = Node(
         package='rviz2',
         executable='rviz2',
-        arguments = f'-d {get_package_share_directory('tutorial_ros_podstawy')}/config/show_fake_lidar.rviz'
+        arguments = ['-d', rviz_config_path]
     )
 
     description.add_action(lidar)

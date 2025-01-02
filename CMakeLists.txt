@@ -13,6 +13,27 @@ find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
 
+
+# LIBRARIES
+add_library(fake_sensor_utils src/fake_sensor_utils.cpp)
+add_library(tutorial_ros_podstawy::fake_sensor_utils ALIAS fake_sensor_utils)
+target_compile_features(fake_sensor_utils PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+target_include_directories(fake_sensor_utils PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
+
+install(
+  TARGETS fake_sensor_utils
+  EXPORT export_fake_sensor_utils
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION bin
+  INCLUDES DESTINATION include
+)
+
+# EXECUTABLES
+
+
 add_executable(minimal_node src/minimal_node.cpp)
 target_include_directories(minimal_node PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -53,6 +74,7 @@ target_include_directories(fake_lidar PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
 target_compile_features(fake_lidar PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+target_link_libraries(fake_lidar fake_sensor_utils)
 ament_target_dependencies(
   fake_lidar
   rclcpp
