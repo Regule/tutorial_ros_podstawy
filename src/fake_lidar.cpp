@@ -54,7 +54,7 @@ void FakeLidarNode::publish_scan()
   msg.range_max = _config.range.second;
   msg.scan_time = _config.get_scan_period_ms()/1000;
 
-  fake_sensors::CyclicObstacle obstacle(_step, 1.0, _config.sample_count);
+  fake_sensors::CyclicObstacle obstacle(_step, _config.sigma, _config.sample_count);
   std::vector<float> ranges(_config.sample_count);
   for(int i=0; i<_config.sample_count; i++)
   {

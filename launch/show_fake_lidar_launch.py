@@ -7,7 +7,10 @@ def generate_launch_description():
 
     lidar = Node(
         package='tutorial_ros_podstawy',
-        executable='fake_lidar'
+        executable='fake_lidar',
+        parameters=[{
+            'sigma':60.0
+        }]
     )
 
 

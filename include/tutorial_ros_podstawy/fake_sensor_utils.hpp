@@ -1,6 +1,8 @@
 #ifndef FAKE_SENSORS_UTILS_HPP
 #define FAKE_SENSORS_UTILS_HPP
 
+#include <cmath>
+
 namespace fake_sensors
 {
 
